@@ -19,7 +19,7 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework.routers import DefaultRouter
-from account.views import UserView
+from account.views import UserView, StaffOnlyModelViewSet
 from candidate.views import CandidateView
 from rest_framework.authtoken.views import obtain_auth_token
 from event.views import EventView
@@ -27,9 +27,9 @@ router=DefaultRouter()
 router.register('user', UserView , basename='user'),
 router.register('candidate', CandidateView, basename='candidate')
 router.register('event', EventView, basename='event')
+router.register('staff_only', StaffOnlyModelViewSet, basename='satff_only')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('token/', obtain_auth_token, name='token'),
-
 ]+router.urls + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

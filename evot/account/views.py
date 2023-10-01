@@ -14,12 +14,7 @@ class UserView(ModelViewSet):
     serializer_class=UserSerializer
     # permission_classes=[IsAuthenticated]
     # authentication_classes=[TokenAuthentication]
-    # /user/is_user_staff/
-    @action(detail=False, methods=['GET'])
-    def is_user_staff(self, request):
-        user=request.user
-        is_staff= user.is_staff
-        return Response(is_staff)
+
     def list(self, request, *args, **kwargs):
         queryset = CustomUser.objects.all()
         serializer = UserSerializer(queryset, many=True)
@@ -40,3 +35,13 @@ class UserView(ModelViewSet):
             return Response({'detail': 'User not found'})
         serializer = UserSerializer(user)
         return Response(serializer.data)
+    
+from rest_framework.permissions import IsAdminUser
+
+class StaffOnlyModelViewSet(ModelViewSet):
+    queryset = CustomUser.objects.all()
+    serializer_class =  UserSerializer
+    permission_classes = (IsAdminUser,)
+    def list(self, request, *args, **kwargs):
+        is_admin = request.user.is_staff
+        return Response(is_admin)
